@@ -36,7 +36,7 @@ def plus_proches(points: list) -> (float, tuple, tuple):
     >>> plus_proches([(2,4), (33,33), (444,444),(5,8)])
     (5.0, (2, 4), (5, 8))
     >>> plus_proches(L_POINTS)
-    (0.4242640687119289, (-8.4, 2.8), (-8.1, 2.5))
+    (2.0615528128088303, (-0.9, -3.1), (-2.5, -1.8))
     """
     point1 = points[0]
     point2 = points[1]
@@ -71,8 +71,8 @@ def plus_proches_dpr(points: list) -> (float, tuple, tuple):
     px.sort(key =lambda p: [p[0]])
     py.sort(key =lambda p: [p[1]])
     #Etape 2 - Diviser
-    if len(px)<=3 :
-        plus_proches(px)
+    if len(points)<=3 :
+        return plus_proches(points)
     else :
         # Etape 3 - Régner
         ax = px[:len(px)//2]
@@ -93,17 +93,20 @@ def plus_proches_dpr(points: list) -> (float, tuple, tuple):
                 q.append(p)
         qy = q[:]
         qy.sort(key =lambda p: [p[1]])
-        #qy = [p for p in py if x - delta < p[0] < x + delta]
-        if len(qy)>=2:
+        if len(qy) >= 2:
             min_comb = distance(qy[0], qy[1])
             p1_min, p2_min = qy[0], qy[1]
             for i in range(len(qy)-1):
                 j = 1
-                while j<=7 and i+j<len(qy):
-                    #A completer
-                    pass
-            #A completer
-            pass
+                while j <= 7 and i + j < len(qy):
+                    comb = distance(qy[i], qy[i + j])
+                    if comb < min_comb:
+                        min_comb = comb
+                        p1_min, p2_min = qy[i], qy[i]
+                    j = j + 1
+            if min_comb < delta:
+                delta = min_comb
+                p1, p2 = p1_min, p2_min
     return delta, p1, p2
 
 def graphique_ppdpr(nuage_points, p1=None, p2=None):
@@ -123,8 +126,8 @@ def genere_nuages_de_points(n=100):
     graphique_ppdpr(nuage_points, p1, p2)
 
 doctest.testmod()
-#print(plus_proches_dpr(L_POINTS))
-#delta, p1, p2 = plus_proches_dpr(L_POINTS)
-#graphique_ppdpr(L_POINTS, p1, p2)
-#genere_nuages_de_points()
+print(plus_proches_dpr(L_POINTS))
+delta, p1, p2 = plus_proches_dpr(L_POINTS)
+graphique_ppdpr(L_POINTS, p1, p2)
+genere_nuages_de_points()
 
