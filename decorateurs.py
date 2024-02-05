@@ -5,25 +5,26 @@ def intouchable():
 
 def chrono(functiont):
     @wraps(functiont)
-    def wrap():
+    def wrap(*args,**kwargs):
         start = perf_counter_ns()
-        print("\nExécution commencée :", start)
-        functiont()
+        print("Exécution commencée :", start)
+        functiont(*args,**kwargs)
         stop = perf_counter_ns()
         print("Exécution finie :", stop)
-        print("Durée de l'exécution :", stop-start,"nanosecondes")
+        dure = stop-start
+        print("Durée de l'exécution :", dure,"nanosecondes =", dure/1000000, "secondes")
     return wrap
 
 
 def decorateur(functiont):
     @wraps(functiont)
-    def wrap():
+    def wrap(*args,**kwargs):
         """
         jaaj
         """
-        print("\nAvant")
-        functiont()
-        print("Après")
+        print("\nDébut de fonction")
+        functiont(*args,**kwargs)
+        print("Fin de fonction")
     return wrap
 
 fonction_dec = decorateur(intouchable)
@@ -37,8 +38,16 @@ another_one()
 print("\n",another_one.__name__)
 print("\n", another_one.__doc__)
 
+@decorateur
 @chrono
-def jaaj():
-    print("JAAAAJ !")
+def boucle(n):
+    """
+    Qui compte jusqu'à n
+    """
+    for _ in range(n):
+        if _ == n:
+            print ("Fin !")
+        pass
 
-jaaj()
+boucle(1000)
+print("Nom de la fonction :",boucle.__name__,"\nDoc de la fonction :", boucle.__doc__)
